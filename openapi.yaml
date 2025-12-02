@@ -1,238 +1,137 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   title: Startup Employee API
   version: 1.0.0
   description: |
-    Simple Employee & Role API for a startup company.
-    Designed as a sample spec but structured so it can grow into a real HR/People service.
+    Simple sample API for a startup employee database.
+    Backed by JSON files `employees.json` and `roles.json` in the repo root.
 
 servers:
-  - url: https://api.example.com
-    description: Production (sample)
-  - url: http://localhost:3000
-    description: Local dev
+  - url: https://ai-fanatic.github.io/emp-startup-db-chatgpt-api  # placeholder
+
+tags:
+  - name: Employees
+  - name: Roles
 
 paths:
   /employees:
     get:
+      tags: [Employees]
       summary: List employees
-      description: Returns a paginated list of employees.
+      description: Returns all employees in the startup.
       parameters:
+        - in: query
+          name: department
+          schema:
+            type: string
+          description: Filter by department name.
         - in: query
           name: status
           schema:
             type: string
             enum: [active, inactive]
-          description: Filter employees by status.
-        - in: query
-          name: department
-          schema:
-            type: string
-          description: Filter employees by department.
-        - in: query
-          name: limit
-          schema:
-            type: integer
-            default: 20
-            minimum: 1
-            maximum: 100
-          description: Page size.
-        - in: query
-          name: offset
-          schema:
-            type: integer
-            default: 0
-            minimum: 0
-          description: Pagination offset.
+          description: Filter by employment status.
       responses:
-        "200":
-          description: List of employees
+        '200':
+          description: A list of employees.
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  total:
-                    type: integer
-                  items:
+                  employees:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Employee"
-                example:
-                  total: 5
-                  items:
-                    - id: emp-001
-                      firstName: Arjun
-                      lastName: Rao
-                      email: arjun.rao@example.com
-                      status: active
-                      primaryRoleId: role-ceo
-                      department: Executive
-    post:
-      summary: Create an employee
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/EmployeeCreate"
-      responses:
-        "201":
-          description: Employee created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Employee"
-        "400":
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+                      $ref: '#/components/schemas/Employee'
+              examples:
+                sample:
+                  summary: Sample employee list
+                  value:
+                    employees:
+                      - id: emp-001
+                        firstName: Naveen
+                        lastName: Chatlapalli
+                        email: naveen.chatlapalli@aiconic.example
+                        roleId: role-ceo
+                        department: Executive
+                        employmentType: full_time
+                        startDate: '2023-01-15'
+                        managerId: null
+                        status: active
+                        location: Irving, TX, USA
+                        salaryBand: E7
 
   /employees/{id}:
     get:
-      summary: Get employee by id
+      tags: [Employees]
+      summary: Get employee by ID
       parameters:
-        - $ref: "#/components/parameters/EmployeeId"
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Employee ID (e.g., emp-001).
       responses:
-        "200":
-          description: Employee found
+        '200':
+          description: Employee record
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Employee"
-        "404":
+                $ref: '#/components/schemas/Employee'
+        '404':
           description: Employee not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-    put:
-      summary: Replace employee
-      parameters:
-        - $ref: "#/components/parameters/EmployeeId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/EmployeeUpdate"
-      responses:
-        "200":
-          description: Employee updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Employee"
-        "404":
-          description: Employee not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-    patch:
-      summary: Partially update employee
-      parameters:
-        - $ref: "#/components/parameters/EmployeeId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/EmployeePatch"
-      responses:
-        "200":
-          description: Employee updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Employee"
-        "404":
-          description: Employee not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
-    delete:
-      summary: Delete employee
-      parameters:
-        - $ref: "#/components/parameters/EmployeeId"
-      responses:
-        "204":
-          description: Employee deleted
-        "404":
-          description: Employee not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
 
   /roles:
     get:
+      tags: [Roles]
       summary: List roles
+      description: Returns all roles in the startup.
       responses:
-        "200":
-          description: List of roles
+        '200':
+          description: A list of roles.
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Role"
+                type: object
+                properties:
+                  roles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Role'
+              examples:
+                sample:
+                  summary: Sample roles
+                  value:
+                    roles:
+                      - id: role-ceo
+                        name: Chief Executive Officer
+                        level: executive
+                        department: Executive
+                        isPeopleManager: true
 
-  /employees/{id}/roles:
+  /roles/{id}:
     get:
-      summary: Get roles for an employee
+      tags: [Roles]
+      summary: Get role by ID
       parameters:
-        - $ref: "#/components/parameters/EmployeeId"
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Role ID (e.g., role-ceo).
       responses:
-        "200":
-          description: List of roles for the employee
+        '200':
+          description: Role record
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Role"
-    post:
-      summary: Assign an additional role to an employee
-      parameters:
-        - $ref: "#/components/parameters/EmployeeId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required: [roleId]
-              properties:
-                roleId:
-                  type: string
-      responses:
-        "200":
-          description: Updated employee with new role
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Employee"
-        "400":
-          description: Invalid role
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+                $ref: '#/components/schemas/Role'
+        '404':
+          description: Role not found
 
 components:
-  parameters:
-    EmployeeId:
-      name: id
-      in: path
-      required: true
-      schema:
-        type: string
-      description: Employee identifier
-
   schemas:
     Employee:
       type: object
@@ -241,147 +140,81 @@ components:
         - firstName
         - lastName
         - email
-        - status
+        - roleId
+        - department
         - employmentType
-        - primaryRoleId
+        - startDate
+        - status
       properties:
         id:
           type: string
           example: emp-001
         firstName:
           type: string
-          example: Arjun
+          example: Naveen
         lastName:
           type: string
-          example: Rao
+          example: Chatlapalli
         email:
           type: string
           format: email
-          example: arjun.rao@example.com
-        status:
+          example: naveen.chatlapalli@aiconic.example
+        roleId:
           type: string
-          enum: [active, inactive]
-        employmentType:
-          type: string
-          enum: [full-time, part-time, contractor, intern]
-        roleIds:
-          type: array
-          items:
-            type: string
-          description: All roles associated with this employee.
-        primaryRoleId:
-          type: string
-          description: The main/primary role for this employee.
+          description: Reference to Role.id.
+          example: role-ceo
         department:
           type: string
           example: Engineering
-        location:
+        employmentType:
           type: string
-          example: Dallas, TX, USA
+          enum: [full_time, part_time, contractor, intern]
+          example: full_time
         startDate:
           type: string
           format: date
-          example: 2023-01-15
+          example: '2023-01-15'
         managerId:
           type: string
           nullable: true
-        skills:
-          type: array
-          items:
-            type: string
-        salaryBand:
-          type: string
-          example: E-3
-        lastPerformanceRating:
-          type: number
-          format: float
-          example: 4.7
-
-    EmployeeCreate:
-      allOf:
-        - $ref: "#/components/schemas/Employee"
-      required:
-        - firstName
-        - lastName
-        - email
-        - employmentType
-        - primaryRoleId
-
-    EmployeeUpdate:
-      allOf:
-        - $ref: "#/components/schemas/Employee"
-
-    EmployeePatch:
-      type: object
-      description: |
-        Partial update; all fields optional.
-      properties:
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-          format: email
+          description: Reference to Employee.id of manager.
+          example: emp-001
         status:
           type: string
           enum: [active, inactive]
-        employmentType:
-          type: string
-          enum: [full-time, part-time, contractor, intern]
-        roleIds:
-          type: array
-          items:
-            type: string
-        primaryRoleId:
-          type: string
-        department:
-          type: string
+          example: active
         location:
           type: string
-        startDate:
-          type: string
-          format: date
-        managerId:
-          type: string
-          nullable: true
-        skills:
-          type: array
-          items:
-            type: string
+          example: Irving, TX, USA
         salaryBand:
           type: string
-        lastPerformanceRating:
-          type: number
-          format: float
+          description: Company-specific salary band.
+          example: E5
 
     Role:
       type: object
       required:
         - id
         - name
+        - level
+        - department
       properties:
         id:
           type: string
-          example: role-ceo
+          example: role-founding-engineer
         name:
           type: string
-          example: Chief Executive Officer
+          example: Founding Engineer
         level:
           type: string
-          example: C-Level
-        description:
-          type: string
+          example: senior_individual_contributor
         department:
           type: string
-          example: Executive
-
-    Error:
-      type: object
-      properties:
-        code:
+          example: Engineering
+        isPeopleManager:
+          type: boolean
+          example: false
+        description:
           type: string
-          example: not_found
-        message:
-          type: string
-          example: Employee not found
+          example: >
+            Early engineer owning large parts of the stack and setting engineering practices.
