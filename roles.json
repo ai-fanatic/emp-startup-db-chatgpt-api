@@ -1,0 +1,68 @@
+{
+  "roles": [
+    {
+      "id": "role-ceo",
+      "name": "Chief Executive Officer",
+      "level": "executive",
+      "department": "Executive",
+      "isPeopleManager": true,
+      "description": "Sets company vision and strategy, oversees all functions, responsible for fundraising and key partnerships."
+    },
+    {
+      "id": "role-head-of-engineering",
+      "name": "Head of Engineering",
+      "level": "director",
+      "department": "Engineering",
+      "isPeopleManager": true,
+      "description": "Owns engineering roadmap, architecture decisions, and delivery quality for all products."
+    },
+    {
+      "id": "role-founding-engineer",
+      "name": "Founding Engineer",
+      "level": "senior_individual_contributor",
+      "department": "Engineering",
+      "isPeopleManager": false,
+      "description": "Early engineer owning large parts of the stack, from infrastructure to UI, and establishing engineering practices."
+    },
+    {
+      "id": "role-senior-engineer",
+      "name": "Senior Software Engineer",
+      "level": "senior_individual_contributor",
+      "department": "Engineering",
+      "isPeopleManager": false,
+      "description": "Designs, implements, and maintains core services and features, mentors junior engineers."
+    },
+    {
+      "id": "role-ml-engineer",
+      "name": "Machine Learning Engineer",
+      "level": "individual_contributor",
+      "department": "Engineering",
+      "isPeopleManager": false,
+      "description": "Builds and deploys ML/AI models into production, owns data pipelines and evaluation."
+    },
+    {
+      "id": "role-product-manager",
+      "name": "Product Manager",
+      "level": "individual_contributor",
+      "department": "Product",
+      "isPeopleManager": false,
+      "description": "Owns problem discovery, prioritization, and product roadmap; works with engineering and design."
+    },
+    {
+      "id": "role-ux-designer",
+      "name": "UX/Product Designer",
+      "level": "individual_contributor",
+      "department": "Product",
+      "isPeopleManager": false,
+      "description": "Designs user experiences, workflows, and visuals across web and mobile surfaces."
+    },
+    {
+      "id": "role-people-ops",
+      "name": "People Operations Specialist",
+      "level": "individual_contributor",
+      "department": "People",
+      "isPeopleManager": false,
+      "description": "Manages hiring, onboarding, performance cycles, and employee engagement."
+    }
+  ]
+}
